@@ -16,7 +16,7 @@ set $stoprec --no-startup-id killall ffmpeg
 floating_modifier $mod
 
 # Do not focus window where mouse is
-focus_follows_mouse no
+focus_follows_mouse yes
 
 ###---Starting External Scripts---###
 #Setting the background:
@@ -24,17 +24,17 @@ exec_always --no-startup-id feh --bg-scale ~/.config/wall.png
 #Starts dunst for notifications:
 #exec --no-startup-id dunst
 #Music player daemon:
-exec --no-startup-id mpd
+exec --no-startup-id pragha
 #Composite manager:
-exec --no-startup-id compton --xrender-sync-fence
+exec --no-startup-id compton 
 #Runs the key remapping scripts
 exec --no-startup-id ~/.scripts/remaps
 #Unclutter makes the mouse invisible after a brief period
-#exec --no-startup-id unclutter
+exec --no-startup-id unclutter
 # Lock window
 exec --no-startup-id xautolock -time 10 -locker blurlock
 #Launch Polybar where appropriate:
-exec_always --no-startup-id polybar-launch
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # Cycle desktop wallpapers from given #FEH_SLIDES folder
 exec_always --no-startup-id $HOME/.bin/feh-slides -i 7 "$FEH_SLIDES" & disown
@@ -62,15 +62,15 @@ set $screencast  --no-startup-id bash ~/.config/Scripts/screencast_alsa.sh
 set $audio --no-startup-id bash ~/.config/Scripts/audio_alsa.sh
 
 #For PULSEAUDIO/PAMIXER
-#set $inc --no-startup-id pamixer --allow-boost -i 5
-#set $biginc --no-startup-id pamixer --allow-boost -i 15
-#set $dec --no-startup-id pamixer --allow-boost -d 5
-#set $bigdec --no-startup-id pamixer --allow-boost -d 15
-#set $mute --no-startup-id pamixer --allow-boost -t
-#set $micmute --no-startup-id pamixer --allow-boost -t
-#set $truemute --no-startup-id pamixer -m
-#set $screencast  --no-startup-id bash ~/.config/Scripts/screencast_pulse.sh
-#set $audio --no-startup-id bash ~/.config/Scripts/audio_pulse.sh
+set $inc --no-startup-id pamixer --allow-boost -i 5
+set $biginc --no-startup-id pamixer --allow-boost -i 15
+set $dec --no-startup-id pamixer --allow-boost -d 5
+set $bigdec --no-startup-id pamixer --allow-boost -d 15
+set $mute --no-startup-id pamixer --allow-boost -t
+set $micmute --no-startup-id pamixer --allow-boost -t
+set $truemute --no-startup-id pamixer -m
+set $screencast  --no-startup-id bash ~/.config/Scripts/screencast_pulse.sh
+set $audio --no-startup-id bash ~/.config/Scripts/audio_pulse.sh
 
 
 ###---Dropdown/Scratchpad Windows---###
@@ -115,7 +115,6 @@ bindsym $mod+q			    kill
 #bindsym $mod+Shift+q	    kill
 
 bindsym $mod+w			    exec --no-startup-id $BROWSER
-#bindsym $mod+Shift+w		exec --no-startup-id waterfox
 
 #bindsym $mod+e			    exec $term -e neomutt
 #bindsym $mod+Shift+e
@@ -185,8 +184,9 @@ bindsym $mod+c			    exec --no-startup-id camtoggle
 bindsym $mod+b              exec --no-startup-id $BROWSER
 bindsym $mod+Shift+b		floating toggle; sticky toggle; exec --no-startup-id bottomleft
 
-bindsym $mod+n			    exec $term -e newsboat
+#bindsym $mod+n			    exec $term -e newsboat
 #bindsym $mod+Shift+n		exec $term -e newsboat
+bindsym $mod+n          exec --no-startup-id nemo
 
 bindsym $mod+m 			    exec st -T ncmpcpp -n ncmpcpp -w ncmpcpp -e ncmpcpp;
 bindsym $mod+Shift+m		exec $mute
@@ -261,7 +261,7 @@ bindsym $mod+Shift+0	move container to workspace $ws10
 
 for_window [class="Blender"] move to workspace $ws6
 for_window [class="Thunderbird"] move to workspace $ws9
-for_window [class="marble"] move to workspace $ws7
+for_window [class="Pragha"] move to workspace $ws7
 #for_window [class="Firefox"] move to workspace $ws2
 for_window [title="GIMP Startup"] move workspace $ws5
 for_window [class="Gimp"] move workspace $ws5
@@ -332,7 +332,6 @@ bindsym $mod+bracketright 	    exec $lilfor
 bindsym $mod+Shift+bracketright exec $bigfor
 
 #Print screen takes a screenshot.
-# Only for Thinkpad x220, t440s Print is mapped to super.
 #With shift, it takes one only of the given window.
 bindsym --release Print			exec scrot
 bindsym --release Shift+Print 	exec scrot -u
@@ -347,9 +346,9 @@ bindsym XF86Launch1		    exec $stoprec
 
 ###---Extra XF86 Keys---###
 #These are the extra media keys that some keyboards have.
-bindsym XF86AudioMute		    exec $mute
-bindsym XF86AudioLowerVolume	exec $dec
-bindsym XF86AudioRaiseVolume	exec $inc
+bindsym XF86AudioMute		      exec --no-startup-id pactl set-sink-mute 0 toggle
+bindsym XF86AudioLowerVolume	exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioRaiseVolume	exec --no-startup-id pactl set-sink-volume 0 +5%
 bindsym XF86PowerOff		    exec sudo shutdown -h now
 bindsym XF86Sleep		        exec sudo zzz
 bindsym XF86AudioMicMute	    exec $micmute
@@ -360,7 +359,7 @@ bindsym XF86MonBrightnessUp	    exec --no-startup-id xbacklight -inc 15
 bindsym XF86Display		        exec --no-startup-id arandr
 #bindsym XF86Battery		    exec
 #bindsym XF86Bluetooth	    	exec
-
+bindsym XF86WLAN           exec $nmcli connect
 
 assign [instance="^qutebrowser$"] 4
 for_window [instance="^qutebrowser$"] border pixel 0, focus
